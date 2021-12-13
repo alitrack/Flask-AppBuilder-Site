@@ -5,3 +5,5 @@ app.db*
 env
 venv
 *.sublime*
+
+__pycache__
