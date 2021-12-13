@@ -9,4 +9,5 @@ How to contribute:
 * `cd app`
 * `export FLASK_APP=__init.py`
 * `export FLASK_ENV=development`
+* `flask fab create-admin`
 * `python -m flask run`

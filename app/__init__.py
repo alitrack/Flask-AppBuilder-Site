@@ -26,9 +26,10 @@ def set_sqlite_pragma(dbapi_connection, connection_record):
 
 from app import views, data
 from app import api
-
-db.create_all()
-data.fill_gender()
-data.fill_data()
+@app.before_first_request
+def initDB():
+    db.create_all()
+    data.fill_gender()
+    data.fill_data()
 
 

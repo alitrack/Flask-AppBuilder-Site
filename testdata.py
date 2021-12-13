@@ -24,10 +24,9 @@ try:
 except:
     db.session.rollback()
 
-f = open('NAMES.DIC', "rb")
-names_list = [x.strip() for x in f.readlines()]
-
-f.close()
+names_list = []
+with open('NAMES.DIC', "r") as f:
+    names_list = [x.strip() for x in f.readlines()]
 
 for i in range(1, 1000):
     c = Contact()
@@ -44,7 +43,7 @@ for i in range(1, 1000):
     db.session.add(c)
     try:
         db.session.commit()
-        print "inserted", c
+        print ("inserted", c)
     except:
         db.session.rollback()
     
