@@ -247,3 +247,7 @@ appbuilder.add_view(CountryGroupByChartView, "Group By Chart Example", icon="fa-
                 label=_('Group By Chart Example'), category="Chart Examples")
 appbuilder.add_view(CountryPieGroupByChartView, "Group By Pie Chart Example", icon="fa-bar-chart-o",
                 label=_('Group By Pie Chart Example'), category="Chart Examples")
+
+
+if appbuilder.app.config['FAB_API_SWAGGER_UI'] :
+    appbuilder.add_link("swagger","/swagger/v1",icon="fas fa-code")

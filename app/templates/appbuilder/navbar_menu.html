@@ -1,0 +1,44 @@
+{% macro menu_item(item) %}
+    <a href="{{item.get_url()}}" >
+       {% if item.icon %}
+        <i class="fa fa-fw {{item.icon}}"></i>&nbsp;
+    {% endif %}
+    {{_(item.label)}}</a>
+{% endmacro %}
+
+{% for item1 in menu.get_list() %}
+    {% if item1 | is_menu_visible %}
+    
+        {% if item1.childs %}
+            
+        <li class="menu-item sub-menu">
+                <a href="#{{_(item1.label)}}">
+                    {% if item1.icon %}
+                    <span class="menu-icon"><i class="fa {{item1.icon}}"></i>&nbsp;</span>
+                    {% endif %}
+
+                    <span class="menu-title">{{_(item1.label)}}</span>
+                    <!-- <span class="menu-suffix">🔥</span>  -->
+                  </a>
+                  <div class="sub-menu-list" data-popper-placement="right" style="position: fixed; left: 0px; top: 0px; margin: 0px; visibility: hidden; transform: translate3d(280px, 99px, 0px); display: none; box-sizing: border-box;" data-popper-escaped="">
+                    <ul>              
+            {% for item2 in item1.childs %}
+                {% if item2 %}
+                    {% if item2.name == '-' %}
+                        {% if not loop.last %}
+                          <li class="divider"></li>
+                        {% endif %}
+                    {% elif item2 | is_menu_visible %}
+                        <li class="menu-item">{{ menu_item(item2) }}</li>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+            </ul>
+        </li>
+        {% else %}
+            <li class="menu-item">
+                {{ menu_item(item1) }}
+            </li>
+        {% endif %}
+    {% endif %}
+{% endfor %}

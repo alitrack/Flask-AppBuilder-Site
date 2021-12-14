@@ -1,0 +1,28 @@
+<aside id="sidebar" class="sidebar break-point-lg has-bg-image">
+    <div class="sidebar-layout">
+      <div class="sidebar-header">
+        {% if appbuilder.app_icon %}
+        <a class="navbar-brand" href="{{appbuilder.get_url_for_index}}">
+        <img src="{{appbuilder.app_icon}}" height="100%" width="auto">
+        </a>
+    {% else %}
+        <span class="navbar-brand">
+        <a href="{{appbuilder.get_url_for_index}}">
+        {{ appbuilder.app_name }}
+        </a>
+        </span>
+    {% endif %} 
+      </div>
+    
+      <div class="sidebar-content">
+        <nav class="menu open-current-submenu">
+          <ul>
+            {% include 'appbuilder/navbar_menu.html' %}
+          </ul>
+        </nav>
+      </div>
+      <div class="sidebar-footer">
+
+      </div>
+    </div>
+  </aside>

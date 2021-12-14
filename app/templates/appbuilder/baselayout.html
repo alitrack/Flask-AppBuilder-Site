@@ -1,0 +1,57 @@
+{% extends 'appbuilder/init.html' %}
+{% import 'appbuilder/baselib.html' as baselib %}
+{% set menu = appbuilder.menu %}
+{% set languages = appbuilder.languages %}
+{% block body %}
+        {% include 'appbuilder/general/confirm.html' %}
+        {% include 'appbuilder/general/alert.html' %}
+    <div class="layout has-sidebar fixed-sidebar fixed-header">
+      
+      {% include 'appbuilder/siderbar.html' %}
+      
+      <div id="overlay" class="overlay"></div>
+      <div class="layout">
+        <header class="header">
+          <a id="btn-collapse" href="#">
+            <i class="ri-menu-line ri-xl"></i>
+          </a>
+          <a id="btn-toggle" href="#" class="sidebar-toggler break-point-lg">
+            <i class="ri-menu-line ri-xl"></i>
+          </a>
+          <div class="container">
+            <div class="navbar-collapse collapse">
+              <ul class="nav navbar-nav navbar-right">
+                  {% include 'appbuilder/navbar_right.html' %}
+              </ul>
+          </div>
+          </div>           
+        </header>
+      
+        <main class="content">     
+    
+          <div class="container">
+           
+            <div class="row" id="content_container">
+                {% block messages %}
+                  {% include 'appbuilder/flash.html' %}
+                {% endblock %}
+                {% block content %}
+                {% endblock %}
+            </div>
+          </div>          
+        </main>
+        <div class="overlay"></div>
+        <!-- <main class="content"> -->
+        {% block footer %}
+        <!-- <div class="img-rounded nav-fixed-bottom"> -->
+            <div class="container">
+                {% include 'appbuilder/footer.html' %}
+            </div>
+        <!-- </div> -->
+      {% endblock %}
+    <!-- </main> -->
+      </div>
+    </div>
+
+{% endblock %}            
+

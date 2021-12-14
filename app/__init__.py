@@ -11,7 +11,8 @@ logging.getLogger().setLevel(logging.DEBUG)
 app = Flask(__name__)
 app.config.from_object('config')
 db = SQLA(app)
-appbuilder = AppBuilder(app, db.session, base_template='mybase.html', indexview=FABView)
+# appbuilder = AppBuilder(app, db.session, base_template='mybase.html', indexview=FABView)
+appbuilder = AppBuilder(app, db.session, indexview=FABView)
 
 
 """

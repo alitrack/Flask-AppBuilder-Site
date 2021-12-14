@@ -29,7 +29,7 @@ LANGUAGES = {
     'pl': {'flag':'pl', 'name':'Polish'}
 }
 
-
+FAB_API_SWAGGER_UI =True
 
 #------------------------------
 # GLOBALS FOR GENERAL APP's
@@ -41,7 +41,7 @@ AUTH_TYPE = 1
 #AUTH_LDAP_SERVER = "ldap://dc.domain.net"
 AUTH_ROLE_ADMIN = 'Admin'
 AUTH_ROLE_PUBLIC = 'Public'
-APP_NAME = "F.A.B. Example"
+APP_NAME = "FAB"
 APP_THEME = ""                  # default
 #APP_THEME = "cerulean.css"      # COOL
 #APP_THEME = "amelia.css"

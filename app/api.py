@@ -35,17 +35,17 @@ class GroupModelApi(ModelRestApi):
 appbuilder.add_api(GroupModelApi)
 
 
-class SwaggerView(BaseView):
+# class SwaggerView(BaseView):
 
-    default_view = 'method1'
+#     default_view = 'method1'
 
-    title = "Example"
-    openapi_url = 'http://localhost:5000/api/v1/_openapi'
+#     title = "Example"
+#     openapi_url = 'http://localhost:5000/api/v1/_openapi'
 
-    @expose('/swagger/')
-    def method1(self):
-        return self.render_template('swagger/swagger.html')
+#     @expose('/swagger/')
+#     def method1(self):
+#         return self.render_template('swagger/swagger.html')
 
 
-appbuilder.add_view(SwaggerView, "Swagger", icon="fa-envelope")
+# appbuilder.add_view(SwaggerView, "Swagger", icon="fa-envelope")
 
