@@ -555,8 +555,8 @@
 }
 .layout .sidebar .menu .menu-item.active > a .menu-title {
   /* background-color: rgb(165, 248, 248); */
-  color: #000000;
-  background-color: #ffffff;
+  color: #50d5b7;
+  /* background-color: #ffffff; */
 }
 .layout .sidebar .menu .menu-item.active > a::after {
   border-color: #ffffff;
