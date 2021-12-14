@@ -505,7 +505,7 @@
   display: inline-block;
 }
 .layout .sidebar .menu .menu-item a .menu-title {
-  font-size: 0.9rem;
+  font-size: 1.2rem;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -551,12 +551,15 @@
 }
 .layout .sidebar .menu .menu-item.sub-menu.open > a::after {
   transform: rotate(45deg);
+  
 }
 .layout .sidebar .menu .menu-item.active > a .menu-title {
-  color: #dee2ec;
+  /* background-color: rgb(165, 248, 248); */
+  color: #000000;
+  background-color: #ffffff;
 }
 .layout .sidebar .menu .menu-item.active > a::after {
-  border-color: #dee2ec;
+  border-color: #ffffff;
 }
 .layout .sidebar .menu .menu-item.active > a .menu-icon {
   color: #dee2ec;

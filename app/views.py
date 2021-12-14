@@ -1,5 +1,5 @@
 import calendar
-from flask import render_template, redirect
+from flask import render_template, redirect,request
 from flask_appbuilder.models.sqla.interface import SQLAInterface
 from flask_appbuilder.widgets import ListThumbnail, ListWidget, \
     ListItem, ListBlock, ShowBlockWidget, ListLinkWidget
@@ -251,3 +251,38 @@ appbuilder.add_view(CountryPieGroupByChartView, "Group By Pie Chart Example", ic
 
 if appbuilder.app.config['FAB_API_SWAGGER_UI'] :
     appbuilder.add_link("swagger","/swagger/v1",icon="fas fa-code")
+
+# adjust security menu to the last.
+from flask_appbuilder.menu import Menu
+
+
+def adjust_menu(self):
+    old_menu = self.menu
+    new_menu = old_menu[1:]
+    new_menu.append(old_menu[0])
+    self.menu = new_menu
+
+
+Menu.adjust_menu = adjust_menu
+appbuilder.menu.adjust_menu()
+
+# add active status of menu items.
+from flask_appbuilder.menu import MenuItem
+def is_active(self):
+    
+    if self.childs:
+        for c in self.childs:
+            if c.is_active():
+                return True
+    else:        
+        if request.path == self.get_url():
+            return True
+        else :
+            if self.baseview :
+                if request.blueprint == self.baseview.blueprint.name:
+                    return True
+
+    return False
+
+
+MenuItem.is_active = is_active    
