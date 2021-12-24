@@ -1,13 +1,20 @@
 import datetime
 from sqlalchemy import Column, Integer, String, ForeignKey, Date, Float
 from sqlalchemy.orm import relationship
-from flask_appbuilder.models.mixins import AuditMixin, BaseMixin, FileColumn, ImageColumn
+from flask_appbuilder.models.mixins import BaseMixin, FileColumn, ImageColumn
 from flask_appbuilder import Model
 
 mindate = datetime.date(datetime.MINYEAR, 1, 1)
 
+# from flask_appbuilder.models.mixins import AuditMixin as _AuditMixin
 
-class ContactGroup(Model):
+from flask_softdeletes.model import SoftDeletedMixin
+
+
+# class AuditMixin(SoftDeletedMixin,_AuditMixin):
+#     pass
+
+class ContactGroup(SoftDeletedMixin,Model):
     id = Column(Integer, primary_key=True)
     name = Column(String(50), unique = True, nullable=False)
 
@@ -15,7 +22,7 @@ class ContactGroup(Model):
         return self.name
 
 
-class Gender(Model):
+class Gender(SoftDeletedMixin,Model):
     id = Column(Integer, primary_key=True)
     name = Column(String(50), unique = True, nullable=False)
 
@@ -23,7 +30,7 @@ class Gender(Model):
         return self.name
 
 
-class Contact(Model):
+class Contact(SoftDeletedMixin,Model):
     id = Column(Integer, primary_key=True)
     name =  Column(String(150), unique = True, nullable=False)
     address = Column(String(564))
@@ -51,7 +58,7 @@ class Contact(Model):
 #----------------------------------------------------------
 
 
-class Country(Model):
+class Country(SoftDeletedMixin,Model):
     id = Column(Integer, primary_key=True)
     name = Column(String(50), unique = True, nullable=False)
 
@@ -59,7 +66,7 @@ class Country(Model):
         return self.name
 
 
-class CountryStats(Model):
+class CountryStats(SoftDeletedMixin,Model):
     id = Column(Integer, primary_key=True)
     stat_date = Column(Date, nullable=True)
     population = Column(Float)

@@ -1,17 +1,123 @@
 import calendar
+from typing import List
 from flask import render_template, redirect,request
-from flask_appbuilder.models.sqla.interface import SQLAInterface
+from flask.helpers import flash
+from flask_appbuilder.models.sqla.interface import SQLAInterface as _SQLAInterface,log
 from flask_appbuilder.widgets import ListThumbnail, ListWidget, \
     ListItem, ListBlock, ShowBlockWidget, ListLinkWidget
 from flask_appbuilder.actions import action
 from flask_appbuilder.models.group import aggregate_count, aggregate_avg, aggregate_sum
-from flask_appbuilder.views import MasterDetailView, ModelView
+from flask_appbuilder.views import MasterDetailView, ModelView as _ModelView
 from flask_appbuilder.baseviews import expose, BaseView
 from flask_appbuilder.charts.views import DirectByChartView, GroupByChartView
 from flask_babel import lazy_gettext as _
+from werkzeug.exceptions import abort
 
 from . import db, appbuilder
 from .models import ContactGroup, Gender, Contact, CountryStats, Country
+import time,re
+from flask_appbuilder import Model
+from flask_appbuilder._compat import as_unicode
+
+from sqlalchemy.exc import IntegrityError
+from flask_appbuilder.const import LOGMSG_ERR_DBI_DEL_GENERIC, LOGMSG_WAR_DBI_DEL_INTEGRITY
+
+class SQLAInterface(_SQLAInterface):
+    def before_delete(self, items: List[Model]) -> bool:
+        try:
+            for item in items:
+                # self._delete_files(item)
+                # self.session.delete(item)
+                item.deleted_time = time.time()
+            self.session.commit()
+            self.message = (as_unicode(self.delete_row_message), "success")
+            return True
+        except IntegrityError as e:
+            self.message = (as_unicode(self.delete_integrity_error_message), "warning")
+            log.warning(LOGMSG_WAR_DBI_DEL_INTEGRITY.format(str(e)))
+            self.session.rollback()
+            return False
+        except Exception as e:
+            self.message = (
+                as_unicode(self.general_error_message + " " + str(sys.exc_info()[0])),
+                "danger",
+            )
+            log.exception(LOGMSG_ERR_DBI_DEL_GENERIC.format(str(e)))
+            self.session.rollback()
+            return False    
+    def delete_all(self, items: List[Model]) -> bool:
+        try:
+            for item in items:
+                # self._delete_files(item)
+                # self.session.delete(item)
+                item.deleted_time = time.time()
+            self.session.commit()
+            self.message = (as_unicode(self.delete_row_message), "success")
+            return True
+        except IntegrityError as e:
+            self.message = (as_unicode(self.delete_integrity_error_message), "warning")
+            log.warning(LOGMSG_WAR_DBI_DEL_INTEGRITY.format(str(e)))
+            self.session.rollback()
+            return False
+        except Exception as e:
+            self.message = (
+                as_unicode(self.general_error_message + " " + str(sys.exc_info()[0])),
+                "danger",
+            )
+            log.exception(LOGMSG_ERR_DBI_DEL_GENERIC.format(str(e)))
+            self.session.rollback()
+            return False
+    def delete(self, item: Model, raise_exception: bool = False) -> bool:
+        try:
+            # self._delete_files(item)
+            # self.session.delete(item)
+            item.deleted_time = time.time()
+            self.session.commit()
+            self.message = (as_unicode(self.delete_row_message), "success")
+            return True
+        except IntegrityError as e:
+            self.message = (as_unicode(self.delete_integrity_error_message), "warning")
+            log.warning(LOGMSG_WAR_DBI_DEL_INTEGRITY.format(str(e)))
+            self.session.rollback()
+            if raise_exception:
+                raise e
+            return False
+        except Exception as e:
+            self.message = (
+                as_unicode(self.general_error_message + " " + str(sys.exc_info()[0])),
+                "danger",
+            )
+            log.exception(LOGMSG_ERR_DBI_DEL_GENERIC.format(str(e)))
+            self.session.rollback()
+            if raise_exception:
+                raise e
+            return False
+
+class ModelView(_ModelView):
+    def __init__(self,**kwargs):
+        model = self.datamodel
+        list_columns=model.get_columns_list()
+        # print(list_columns)
+        self.list_columns=[x for x in list_columns if not (x in ['deleted_time','id']  or x.endswith('_id'))]
+        self.add_exclude_columns = [
+        "deleted_time"]
+        self.edit_exclude_columns = self.add_exclude_columns        
+        super(ModelView, self).__init__(**kwargs)
+
+    
+    def _list(self):
+        match=False
+        for arg in request.args:
+            re_match = re.findall("_flt_(\d)_(deleted_time)", arg)
+            if re_match:
+                match= True
+                break
+        query_cls =self.datamodel.session.session_factory.kw['query_cls']
+        if match:
+            query_cls._with_deleted=True
+        else:
+            query_cls._with_deleted=False
+        return super()._list()
 
 
 class ContactModelView(ModelView):
@@ -82,6 +188,11 @@ class GroupModelView(ModelView):
     add_template = 'contact_group_add.html'
     edit_template = 'contact_group_edit.html'
     show_template = 'contact_group_show.html'
+
+    def pre_delete(self, item):
+        data = db.session.query(Contact).filter(Contact.contact_group_id==item.id)
+        self.datamodel.delete_all(data)
+        return super().pre_delete(item)
 
 
 class ContactChartView(GroupByChartView):
